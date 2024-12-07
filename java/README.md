@@ -6,3 +6,4 @@ custom exception InvalidInputException
 Simple REST Controller.  lombok not working
 @EnableScheduling run task periodically
 ApplicationFilter to look at request and set requestattribute
+synchronized method demo

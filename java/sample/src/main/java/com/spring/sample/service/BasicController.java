@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spring.sample.data.DataServiceFactory;
+import com.spring.sample.data.DummyDataService;
+import com.spring.sample.data.IDataService;
 import com.spring.sample.exception.InvalidInputException;
 import com.spring.sample.model.Student;
 
@@ -29,8 +34,32 @@ public class BasicController extends BaseController {
 
 	private static final Logger log = LoggerFactory.getLogger(BasicController.class);
 
+	@Autowired
+	private IDataService dataService;
+	
+	public void setDataService(IDataService dataService) {
+		this.dataService = dataService;		
+	}
+	
+	@GetMapping(value = "/sample/dataservice/{keyId}", produces = "application/json")
+	public ResponseEntity<Map<String, Object>> getDataFromService(
+			@PathVariable(name = "keyId") String keyId ) {
+		Map<String, Object> mapClass = dataService.getData(keyId);
+		return new ResponseEntity<>(mapClass, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/sample/ctof", produces = "application/json")
+	public ResponseEntity<Map<String, Object>> getCelciusToFahrenheit(
+			@RequestParam(name = "c", required = true) int celcius) {
+		Map<String, Object> map = new HashMap<>();
+		int fahrenheit = (int) (1.8 * celcius + 32);
+		map.put("celcius", celcius);
+		map.put("farenheit", fahrenheit);
+		return new ResponseEntity<>(map, HttpStatus.OK);
+	}
+	
 	@GetMapping(value = "/sample/data", produces = "application/json")
-	public ResponseEntity<Map<String, Object>> getData() {
+	public ResponseEntity<Map<String, Object>> getStaticData() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("id", "100");
 		map.put("name", "David");

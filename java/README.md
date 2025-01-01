@@ -9,3 +9,4 @@ ApplicationFilter to look at request and set requestattribute
 synchronized method demo
 DataService with factory autowired into controller, Unit Test with a Mockito, Load test resource
 pom.xml added with new swagger(springdoc), aspect aop, spring starter aop
+default swagger ui http://localhost:8080/swagger-ui/index.html

@@ -20,11 +20,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spring.sample.aop.annotation.CheckAccess;
 import com.spring.sample.data.DataServiceFactory;
 import com.spring.sample.data.DummyDataService;
 import com.spring.sample.data.IDataService;
 import com.spring.sample.exception.InvalidInputException;
 import com.spring.sample.model.Student;
+import com.spring.sample.service.PaymentService.ServiceType;
 
 import org.json.JSONObject;
 
@@ -34,6 +36,9 @@ public class BasicController extends BaseController {
 
 	private static final Logger log = LoggerFactory.getLogger(BasicController.class);
 
+	@Autowired
+	private PaymentService paymentService;
+	
 	@Autowired
 	private IDataService dataService;
 	
@@ -156,9 +161,37 @@ public class BasicController extends BaseController {
 	}
 	
 	@GetMapping(value = "/sample/permissions")
-	public ResponseEntity<Map<String, Object>> getRequestAttribute(@RequestAttribute(name = "permissions") String permissions) {
+	public ResponseEntity<Map<String, Object>> getRequestAttributeSample(@RequestAttribute(name = "permissions") String permissions) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("permissions", permissions);
+		String attrFromBase = this.getRequestAttribute("permissions");
+		map.put("permissionsFromBase", attrFromBase);
+		return new ResponseEntity<>(map, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/sample/matherror")
+	public ResponseEntity<Map<String, Object>> getDivideBy(@RequestParam(name = "x", required = true) int x, @RequestParam(name= "y", required = true) int y) {
+		
+		Map<String, Object> map = new HashMap<>();
+		float result = x / y;
+		map.put("result", result);
+		return new ResponseEntity<>(map, HttpStatus.OK);
+	}
+	
+	@CheckAccess(group = "userAGroup")
+	@GetMapping(value = "/sample/checkaccess")
+	public ResponseEntity<Map<String, Object>> checkAccess(@RequestParam(name = "access", required = true) String access) {
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("hasAccess", true);
+		return new ResponseEntity<>(map, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/sample/transaction")
+	public ResponseEntity<Map<String, Object>> doTransaction() {
+		paymentService.doPayment(ServiceType.Cash);
+		Map<String, Object> map = new HashMap<>();
+		map.put("doPayment", true);
 		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
 	

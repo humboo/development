@@ -10,3 +10,5 @@ synchronized method demo
 DataService with factory autowired into controller, Unit Test with a Mockito, Load test resource
 pom.xml added with new swagger(springdoc), aspect aop, spring starter aop
 default swagger ui http://localhost:8080/swagger-ui/index.html
+global exception handler, aop with checkAccess annotation sample
+@EnableAspectJAutoProxy, @Pointcut sample, with @Before, @After, @AfterReturning

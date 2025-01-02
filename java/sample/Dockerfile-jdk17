@@ -1,0 +1,14 @@
+FROM openjdk:17
+
+RUN mkdir /etc/sample
+
+WORKDIR /etc/sample
+
+COPY ./target/sample-0.0.1-SNAPSHOT.jar sample-0.0.1-SNAPSHOT.jar
+
+ENV PROFILE=docker
+
+EXPOSE 8080
+
+CMD ["java", "-jar", "-Dspring.profiles.active=${PROFILE}", "/etc/sample/sample-0.0.1-SNAPSHOT.jar"]
+
